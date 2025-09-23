@@ -1,6 +1,6 @@
 import React from "react";
 import Hero from "./Hero";
-import ProductList from "./ProductList";
+import ProductList from "@/components/products/ProductList";
 
 const HomePage = () => {
   return (
