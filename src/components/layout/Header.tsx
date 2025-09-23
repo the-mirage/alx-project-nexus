@@ -63,7 +63,7 @@ const Header = () => {
   return (
     <nav className="bg-primary-color">
       <div className="flex justify-between items-center p-5">
-        <Link href="/" className="text-2xl lg:ps-20 ps-10">
+        <Link href="/" className="fashion-font text-2xl lg:ps-20 ps-10">
           ALX Trendz
         </Link>
 

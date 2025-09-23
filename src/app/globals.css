@@ -5,10 +5,11 @@
   --background: #171717;
   --primary-color: #fafafa;
   --secondary-color: #b0b0b0;
-  --accent-color: #fac23c;
+  --accent-color: #e8a812;
+  --accent-color-secondary: #42121b;
 
   --font-body: "Poppins", sans-serif;
-  --font-pinyon-script: "Pinyon Script", cursive;
+  --font-kaushan-script: "Kaushan Script", cursive;
 }
 body {
   font-family: var(--font-body);
@@ -30,5 +31,13 @@ body {
 /* Fonts */
 
 .fashion-font {
-  font-family: var(--font-pinyon-script);
+  font-family: var(--font-kaushan-script);
+}
+
+/* Text colors */
+.text-accent-color {
+  color: var(--accent-color);
+}
+.text-accent-color-secondary {
+  color: var(--accent-color-secondary);
 }

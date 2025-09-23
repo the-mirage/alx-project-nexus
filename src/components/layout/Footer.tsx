@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="pt-10 pb-4 bg-secondary-color text-[14px]">
       <div className="flex flex-wrap justify-around gap-4">
-        <Link href="/" className="text-2xl lg:ps-20 ps-10">
+        <Link href="/" className="fashion-font text-2xl lg:ps-20 ps-10">
           ALX Trendz
         </Link>
         {/* Quick links */}

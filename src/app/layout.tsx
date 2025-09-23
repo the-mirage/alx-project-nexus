@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Pinyon_Script, Poppins } from "next/font/google";
+import { Geist, Geist_Mono, Kaushan_Script, Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -10,8 +10,8 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const pinyonScript = Pinyon_Script({
-  variable: "--font-pinyon-script",
+const kaushanScript = Kaushan_Script({
+  variable: "--font-kaushan-script",
   subsets: ["latin"],
   weight: ["400"],
 });
@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${pinyonScript.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${kaushanScript.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
         {children}
