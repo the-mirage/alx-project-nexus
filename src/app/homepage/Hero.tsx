@@ -1,8 +1,14 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import fashion from "@/../public/images/jewel.svg";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const router = useRouter();
+  const handleExploreMore = () => {
+    router.push("/products");
+  };
   return (
     <section className="w-full h-full">
       <div className="flex md:flex-nowrap flex-wrap justify-center items-center gap-5">
@@ -23,7 +29,10 @@ const Hero = () => {
             <button className="w-full md:text-xl sm:text-base bg-secondary-color sm:py-3 py-2 sm:px-4 px-3 rounded-md shadow-md cursor-pointer">
               Order Now
             </button>
-            <button className="w-full md:text-xl sm:text-base bg-primary-color sm:py-3 py-2 sm:px-4 px-3 rounded-md border-1 shadow-md cursor-pointer">
+            <button
+              onClick={handleExploreMore}
+              className="w-full md:text-xl sm:text-base bg-primary-color sm:py-3 py-2 sm:px-4 px-3 rounded-md border-1 shadow-md cursor-pointer hover:bg-opacity-70 transition-colors"
+            >
               Explore More
             </button>
           </div>
