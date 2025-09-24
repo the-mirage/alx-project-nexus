@@ -11,6 +11,8 @@ export interface Product {
   price: number;
   discount?: number;
   image: string | StaticImageData;
+  discountedPrice?: number;
+  category?: string;
   description: string;
 }
 

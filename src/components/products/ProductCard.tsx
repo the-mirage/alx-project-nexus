@@ -18,15 +18,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <>
       <Link
-        href={`/product/${product.name.replace(/\s+/g, "-").toLowerCase()}/`}
+        href={`/products/${product.name.replace(/\s+/g, "-").toLowerCase()}/`}
         className="bg-[#e8a812]/2 p-4 flex flex-col gap-2 shadow-md rounded-2xl"
         key={product.id}
       >
         <Image
           src={product.image}
           alt="Alt text here"
-          className="object-cover"
+          className="object-cover w-full h-60"
         />
+
         {product.discount && (
           <div className="flex gap-1 items-center">
             <p className="text-[13px] text-white bg-[#42121b] px-1 py-0.5 rounded-md">

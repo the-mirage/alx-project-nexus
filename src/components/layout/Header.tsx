@@ -45,7 +45,7 @@ const NavItems: React.FC<NavItemsProps> = ({ navOpen, setNavOpen }) => {
         </Link>
       </li>
       <li onClick={() => setNavOpen && setNavOpen(false)}>
-        <Link href="/">
+        <Link href="/cart">
           <ShoppingCartIcon className="h-6 w-6" />
         </Link>
       </li>
@@ -61,7 +61,7 @@ const NavItems: React.FC<NavItemsProps> = ({ navOpen, setNavOpen }) => {
 const Header = () => {
   const [navOpen, setNavOpen] = useState(false);
   return (
-    <nav className="bg-primary-color">
+    <nav className="bg-primary-color z-20">
       <div className="flex justify-between items-center p-5">
         <Link href="/" className="fashion-font text-2xl lg:ps-20 ps-10">
           ALX Trendz
@@ -86,7 +86,7 @@ const Header = () => {
         <NavItems />
       </div>
       {navOpen && (
-        <div className="absolute bg-primary-color rounded-b-xl w-full">
+        <div className={`absolute bg-primary-color rounded-b-xl w-full z-20 `}>
           <NavItems navOpen={navOpen} setNavOpen={setNavOpen} />
         </div>
       )}
