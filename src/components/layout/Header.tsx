@@ -9,8 +9,11 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import { NavItemsProps } from "@/interfaces";
+import { useCart } from "@/stores/productStore";
 
 const NavItems: React.FC<NavItemsProps> = ({ navOpen, setNavOpen }) => {
+  const { itemCount } = useCart();
+
   return (
     <ul
       className={`bg-primary-color pr-10 ${
@@ -45,8 +48,13 @@ const NavItems: React.FC<NavItemsProps> = ({ navOpen, setNavOpen }) => {
         </Link>
       </li>
       <li onClick={() => setNavOpen && setNavOpen(false)}>
-        <Link href="/cart">
+        <Link href="/cart" className="relative">
           <ShoppingCartIcon className="h-6 w-6" />
+          {itemCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-[#e8a812] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+              {itemCount}
+            </span>
+          )}
         </Link>
       </li>
       <li>
@@ -61,7 +69,7 @@ const NavItems: React.FC<NavItemsProps> = ({ navOpen, setNavOpen }) => {
 const Header = () => {
   const [navOpen, setNavOpen] = useState(false);
   return (
-    <nav className="bg-primary-color z-20">
+    <nav className="w-full bg-primary-color z-20">
       <div className="flex justify-between items-center p-5">
         <Link href="/" className="fashion-font text-2xl lg:ps-20 ps-10">
           ALX Trendz
