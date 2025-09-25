@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import ProductList from "../../components/products/ProductList";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
@@ -62,7 +61,7 @@ const ProductCarousel = () => {
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setCurrentSlide(index);
     setIsAutoPlaying(false);
     // Resume auto-play after 10 seconds

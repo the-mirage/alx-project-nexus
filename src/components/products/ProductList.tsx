@@ -1,91 +1,22 @@
 "use client";
-import React, { useState } from "react";
-import trendz from "@/../public/images/trendz.png";
+import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import Categories from "./Categories";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
-
-const productItems = [
-  {
-    id: 1,
-    name: "Premium Cotton T-Shirt",
-    price: 29.99,
-    discount: 10,
-    image: trendz,
-    category: "T-Shirts",
-    description:
-      "Comfortable and stylish cotton t-shirt perfect for everyday wear.",
-  },
-  {
-    id: 2,
-    name: "Cozy Winter Hoodie",
-    price: 39.99,
-    discount: 15,
-    image: trendz,
-    category: "Hoodies",
-    description: "Another great product with amazing features.",
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: 49.99,
-    image: trendz,
-    category: "Dresses",
-    description: "Premium quality product for discerning customers.",
-  },
-  {
-    id: 4,
-    name: "Evening Dress",
-    price: 49.99,
-    image: trendz,
-    category: "Dresses",
-    description: "Premium quality product for discerning customers.",
-  },
-  {
-    id: 5,
-    name: "Sports Hoodie",
-    price: 49.99,
-    image: trendz,
-    category: "Hoodies",
-    description: "Athletic hoodie perfect for workouts.",
-  },
-  {
-    id: 6,
-    name: "Designer Handbag",
-    price: 149.99,
-    image: trendz,
-    category: "Bags",
-    description: "Stylish handbag for modern women.",
-  },
-  {
-    id: 7,
-    name: "Casual Cotton T-Shirt",
-    price: 49.99,
-    image: trendz,
-    category: "T-Shirts",
-    description: "Premium quality product for discerning customers.",
-  },
-  {
-    id: 8,
-    name: "Elegant Summer Dress",
-    price: 79.99,
-    image: trendz,
-    category: "Dresses",
-    description: "Beautiful dress perfect for summer occasions.",
-  },
-];
+import { useProducts } from "@/stores/productStore";
 
 type SortOrder = "asc" | "desc";
 
 const ProductList = () => {
+  const { filteredProducts, isLoading, error, fetchProducts } = useProducts();
+  // const { categories, selectedCategory, setSelectedCategory } = useCategories();
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   // Filter products by category
-  const filteredProducts =
-    activeCategory === "All"
-      ? productItems
-      : productItems.filter((product) => product.category === activeCategory);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   // Sort filtered products by price
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -100,6 +31,9 @@ const ProductList = () => {
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="w-full h-full my-10">
