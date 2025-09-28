@@ -117,7 +117,7 @@ export const useProductStore = create<ProductStore>()(
         set({ isLoading: true, error: null });
         try {
           const response = await fetch(
-            "https://dummyjson.com/products?limit=100"
+            "https://dummyjson.com/products?limit=200"
           );
           if (!response.ok) throw new Error("Failed to fetch products");
 
@@ -180,17 +180,18 @@ export const useProductStore = create<ProductStore>()(
           if (!response.ok) throw new Error("Failed to fetch categories");
 
           const categories = await response.json();
-          set({ categories: ["All", ...categories] });
+          set({ categories: ["Tops", ...categories] });
         } catch (error) {
           console.error("Failed to fetch categories:", error);
           // Fallback categories
           set({
             categories: [
               "All",
-              "smartphones",
-              "laptops",
+              "mens-shirts",
               "fragrances",
               "skincare",
+              "smartphones",
+              "laptops",
               "groceries",
             ],
           });
