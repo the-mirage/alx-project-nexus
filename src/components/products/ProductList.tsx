@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
 import Categories from "./Categories";
 import {
@@ -38,14 +39,27 @@ const ProductList = () => {
     setCurrentPage(1);
   }, [selectedCategory]);
 
-  // Filter products by selected category
-  const filteredProducts =
+  // Get search term from URL
+  const searchParams = useSearchParams();
+  const searchTerm = searchParams.get("search")?.toLowerCase() || "";
+
+  // Filter products by selected category and search term
+  let filteredProducts =
     selectedCategory === "All" || selectedCategory === "all"
       ? products
       : products.filter(
           (product) =>
             product.category.toLowerCase() === selectedCategory.toLowerCase()
         );
+
+  if (searchTerm) {
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.title?.toLowerCase().includes(searchTerm) ||
+        product.name?.toLowerCase().includes(searchTerm) ||
+        product.description?.toLowerCase().includes(searchTerm)
+    );
+  }
 
   // Sort filtered products by price
   const sortedProducts = [...filteredProducts].sort((a, b) => {

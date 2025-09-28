@@ -34,6 +34,16 @@ const NavItems: React.FC<NavItemsProps> = ({ navOpen, setNavOpen }) => {
           id="search"
           placeholder="Search. . ."
           className={`text-md outline-0 ${navOpen ? "w-full" : ""}`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const searchTerm = (e.target as HTMLInputElement).value.trim();
+              if (searchTerm) {
+                window.location.href = `/products?search=${encodeURIComponent(
+                  searchTerm
+                )}`;
+              }
+            }
+          }}
         />
       </li>
 
