@@ -3,69 +3,37 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import trendz from "@/../public/images/trendz.png";
-
-// Featured products for the hero carousel
-const featuredProducts = [
-  {
-    id: 1,
-    name: "Premium Cotton T-Shirt",
-    price: 29.99,
-    discount: 10,
-    category: "T-Shirts",
-    image: trendz,
-    description:
-      "Comfortable and stylish cotton t-shirt perfect for everyday wear.",
-    featured: true,
-    heroTitle: "Comfort Meets Style",
-    heroSubtitle: "Discover our premium cotton collection",
-  },
-  {
-    id: 2,
-    name: "Cozy Winter Hoodie",
-    price: 59.99,
-    discount: 15,
-    category: "Hoodies",
-    image: trendz,
-    description: "Warm and comfortable hoodie for cold weather.",
-    featured: true,
-    heroTitle: "Stay Warm in Style",
-    heroSubtitle: "Perfect for the cold season",
-  },
-  {
-    id: 3,
-    name: "Designer Handbag",
-    price: 149.99,
-    discount: 20,
-    category: "Bags",
-    image: trendz,
-    description: "Stylish handbag for modern women.",
-    featured: true,
-    heroTitle: "Elegance Redefined",
-    heroSubtitle: "Luxury accessories for every occasion",
-  },
-];
+import { useProductStore } from "@/stores/productStore";
 
 const ProductCarousel = () => {
+  const { featuredProducts, fetchProducts, isLoading, error } =
+    useProductStore();
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
+  // Fetch products on mount
+  useEffect(() => {
+    if (featuredProducts.length === 0) {
+      fetchProducts();
+    }
+  }, [featuredProducts.length, fetchProducts]);
+
   // Auto-play functionality
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || featuredProducts.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % featuredProducts.length);
-    }, 3000); // Change slide every 5 seconds
+    }, 4000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, featuredProducts.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
     setIsAutoPlaying(false);
-    // Resume auto-play after 10 seconds
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    setTimeout(() => setIsAutoPlaying(true), 8000);
   };
 
   const goToPrevious = () => {
@@ -73,28 +41,59 @@ const ProductCarousel = () => {
       prev === 0 ? featuredProducts.length - 1 : prev - 1
     );
     setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    setTimeout(() => setIsAutoPlaying(true), 8000);
   };
 
   const goToNext = () => {
     setCurrentSlide((prev) => (prev + 1) % featuredProducts.length);
     setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    setTimeout(() => setIsAutoPlaying(true), 8000);
   };
 
+  // Loading state
+  if (isLoading || featuredProducts.length === 0) {
+    return (
+      <div className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden bg-gradient-to-br from-[#e8a812]/2 to-[#42121b]/5 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#e8a812] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden bg-gradient-to-br from-[#e8a812]/2 to-[#42121b]/5 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error: {error}</p>
+          <button
+            onClick={fetchProducts}
+            className="bg-[#e8a812] hover:bg-[#d49610] text-white px-6 py-3 rounded-lg transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const currentProduct = featuredProducts[currentSlide];
-  const discountedPrice = currentProduct.discount
+  const productName = currentProduct.title || currentProduct.name;
+  const productImage = currentProduct.thumbnail || currentProduct.image;
+  const discountedPrice = currentProduct.discountPercentage
     ? currentProduct.price -
-      (currentProduct.price * currentProduct.discount) / 100
+      (currentProduct.price * currentProduct.discountPercentage) / 100
     : currentProduct.price;
 
   return (
-    <div className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden bg-gradient-to-br from-[#e8a812]/2 to-[#42121b]/5 ">
+    <div className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden bg-gradient-to-br from-[#e8a812]/2 to-[#42121b]/5 z-10">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <Image
-          src={currentProduct.image}
-          alt={currentProduct.name}
+          src={String(productImage)}
+          alt={String(productName)}
           fill
           className="object-cover opacity-70"
           priority
@@ -103,7 +102,7 @@ const ProductCarousel = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center">
+      <div className="relative z-20 h-full flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             {/* Badge */}
@@ -112,19 +111,19 @@ const ProductCarousel = () => {
               Featured Product
             </div>
 
-            {/* Hero Text */}
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-              {currentProduct.heroTitle}
+            {/* Product Name */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+              {productName}
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-200 mb-6 leading-relaxed">
-              {currentProduct.heroSubtitle}
+              {currentProduct.description}
             </p>
 
             {/* Product Info */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
               <div className="flex items-center gap-3">
-                {currentProduct.discount ? (
+                {currentProduct.discountPercentage ? (
                   <>
                     <span className="text-2xl sm:text-3xl font-bold text-white">
                       ${discountedPrice.toFixed(2)}
@@ -133,7 +132,7 @@ const ProductCarousel = () => {
                       ${currentProduct.price.toFixed(2)}
                     </span>
                     <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-medium">
-                      {currentProduct.discount}% OFF
+                      {Math.round(currentProduct.discountPercentage)}% OFF
                     </span>
                   </>
                 ) : (
@@ -144,10 +143,14 @@ const ProductCarousel = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-300">in</span>
-                <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
-                  {currentProduct.category}
+                <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm capitalize">
+                  {currentProduct.category?.replace("-", " ")}
                 </span>
+                {currentProduct.rating && (
+                  <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
+                    ★ {currentProduct.rating.toFixed(1)}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -173,7 +176,7 @@ const ProductCarousel = () => {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-colors z-20"
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-colors z-30"
         aria-label="Previous slide"
       >
         <ChevronLeftIcon className="w-6 h-6" />
@@ -181,14 +184,14 @@ const ProductCarousel = () => {
 
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-colors z-20"
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-colors z-30"
         aria-label="Next slide"
       >
         <ChevronRightIcon className="w-6 h-6" />
       </button>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-30">
         {featuredProducts.map((_, index) => (
           <button
             key={index}
@@ -204,7 +207,7 @@ const ProductCarousel = () => {
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 z-20">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 z-30">
         <div
           className="h-full bg-[#e8a812] transition-all duration-300 ease-linear"
           style={{
@@ -215,4 +218,5 @@ const ProductCarousel = () => {
     </div>
   );
 };
+
 export default ProductCarousel;
