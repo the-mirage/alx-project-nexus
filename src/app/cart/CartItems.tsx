@@ -4,15 +4,28 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/stores/productStore";
 
+// Define the type for a cart item
+type CartItemType = {
+  id: number;
+  name: string;
+  price: number;
+  image?: string;
+  category?: string;
+  discount?: number;
+  discountedPrice?: number;
+  quantity: number;
+};
+
 const CartItems = () => {
   const { cartItems, itemCount, updateQuantity, removeFromCart } = useCart();
+
   // Calculate discounted price for a product
   const getDiscountedPrice = (price: number, discount?: number) => {
     return discount ? price - (price * discount) / 100 : price;
   };
 
   // Calculate shipping and tax
-  const subtotal = cartItems.reduce((total, item) => {
+  const subtotal = cartItems.reduce((total: number, item: CartItemType) => {
     const itemPrice =
       item.discountedPrice || getDiscountedPrice(item.price, item.discount);
     return total + itemPrice * item.quantity;
@@ -20,8 +33,9 @@ const CartItems = () => {
   const shipping = subtotal > 50 ? 0 : 9.99; // Free shipping over $50
   const tax = subtotal * 0.08; // 8% tax
   const finalTotal = subtotal + shipping + tax;
+
   // Cart Item Component - Mobile Optimized
-  const CartItem = ({ item }: { item: any }) => {
+  const CartItem: React.FC<{ item: CartItemType }> = ({ item }) => {
     const discountedPrice =
       item.discountedPrice || getDiscountedPrice(item.price, item.discount);
     const itemTotal = discountedPrice * item.quantity;
@@ -37,7 +51,7 @@ const CartItems = () => {
                 item.image ||
                 "https://dummyjson.com/image/350x200/?text=broken+image"
               }
-              alt={item.name}
+              alt={item.name ?? "Product image"}
               className="w-full h-full object-cover"
               width={80}
               height={80}

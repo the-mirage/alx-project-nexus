@@ -5,18 +5,7 @@ export interface NavItemsProps {
   setNavOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// export interface ProductProps {
-//   id: number;
-//   name: string;
-//   price: number;
-//   discount?: number;
-//   image: string | StaticImageData;
-//   discountedPrice?: number;
-//   category?: string;
-//   description: string;
-// }
-
-export type ProductProps = {
+export interface ProductProps {
   id: number;
   title?: string;
   name?: string | undefined;
@@ -32,8 +21,13 @@ export type ProductProps = {
   brand?: string;
   stock?: number;
   rating?: number;
-};
+  quantity?: number;
+}
 export interface ProductListProps {
   products: ProductProps[];
   quantity?: number | undefined;
+}
+
+export interface CartItemsProp {
+  product: ProductProps;
 }
